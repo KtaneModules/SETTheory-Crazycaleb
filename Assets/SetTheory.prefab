@@ -784,7 +784,7 @@ Transform:
   m_GameObject: {fileID: 1768794439814634}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.051, z: 0.03}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 4856116343776540}
   m_RootOrder: 1
@@ -810,7 +810,7 @@ Transform:
   m_GameObject: {fileID: 1772290401172788}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.051, z: 0.03}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 4060634043116952}
   m_RootOrder: 1
@@ -987,7 +987,7 @@ Transform:
   m_GameObject: {fileID: 1907241581266850}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.051, z: 0.03}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 4826791893075898}
   m_RootOrder: 1
@@ -1028,7 +1028,7 @@ Transform:
   m_GameObject: {fileID: 1083892579075952}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.051, z: 0.03}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 4573154918424046}
   m_RootOrder: 1
@@ -1054,7 +1054,7 @@ Transform:
   m_GameObject: {fileID: 1772154956333102}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.051, z: 0.03}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 4414549657496408}
   m_RootOrder: 1
@@ -1125,7 +1125,7 @@ Transform:
   m_GameObject: {fileID: 1875266843316366}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.051, z: 0.03}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 4910829506940430}
   m_RootOrder: 1
@@ -1191,7 +1191,7 @@ Transform:
   m_GameObject: {fileID: 1538620186852332}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.051, z: 0.03}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 4672929311220402}
   m_RootOrder: 1
@@ -1223,7 +1223,7 @@ Transform:
   m_GameObject: {fileID: 1616325035063074}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.051, z: 0.03}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 4657893683847130}
   m_RootOrder: 1
@@ -1307,7 +1307,7 @@ Transform:
   m_GameObject: {fileID: 1412823179307828}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.051, z: 0.03}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 4736982354691402}
   m_RootOrder: 1
@@ -2411,7 +2411,7 @@ MonoBehaviour:
   Module: {fileID: 114943217843082284}
   BombInfo: {fileID: 114254322482168384}
   Audio: {fileID: 114960229496981458}
-  Buttonage:
+  ButtonSels:
   - {fileID: 114592979698788602}
   - {fileID: 114229980010817156}
   - {fileID: 114681255701757812}
@@ -2421,17 +2421,27 @@ MonoBehaviour:
   - {fileID: 114932009357014504}
   - {fileID: 114555708579067146}
   - {fileID: 114784499309696562}
-  submit: {fileID: 114565196963909836}
-  set:
+  SubmitSel: {fileID: 114565196963909836}
+  SetSprites:
   - {fileID: 21300000, guid: 2c39012391c9b994aaad7e5cc55570ab, type: 3}
-  - {fileID: 21300000, guid: 4aab67f08a8b46a4689e061c3082da6c, type: 3}
-  - {fileID: 21300000, guid: 86be5cbeb4951044e81a9125e374c86a, type: 3}
   - {fileID: 21300000, guid: 15ef0e25f55d07f43b5ba937eeb6d304, type: 3}
-  - {fileID: 21300000, guid: b66ef754195ee81488bd8251e72f24d6, type: 3}
-  - {fileID: 21300000, guid: 0605633c5318c1b449d87eb14513acbe, type: 3}
   - {fileID: 21300000, guid: bec4058d17dd26949912c768373adddd, type: 3}
+  - {fileID: 21300000, guid: 4aab67f08a8b46a4689e061c3082da6c, type: 3}
+  - {fileID: 21300000, guid: b66ef754195ee81488bd8251e72f24d6, type: 3}
   - {fileID: 21300000, guid: 36e20f4794d1d0944ba7c85dfd3b7bbf, type: 3}
+  - {fileID: 21300000, guid: 86be5cbeb4951044e81a9125e374c86a, type: 3}
+  - {fileID: 21300000, guid: 0605633c5318c1b449d87eb14513acbe, type: 3}
   - {fileID: 21300000, guid: 4db0f3dab53314a42be2e667470577b0, type: 3}
+  ButtonSprites:
+  - {fileID: 212271502521611552}
+  - {fileID: 212076252280369706}
+  - {fileID: 212288469431426128}
+  - {fileID: 212347258311660842}
+  - {fileID: 212344712688451844}
+  - {fileID: 212615323098001038}
+  - {fileID: 212078363976058240}
+  - {fileID: 212741817891638924}
+  - {fileID: 212719643290620910}
 --- !u!114 &114647893747142844
 MonoBehaviour:
   m_ObjectHideFlags: 1
