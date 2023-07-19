@@ -17,17 +17,19 @@ public class SetTheoryScript : MonoBehaviour
 
     public KMSelectable[] ButtonSels;
     public KMSelectable SubmitSel;
-    public Sprite[] SetSprites;
-    public SpriteRenderer[] ButtonSprites;
-
+    public Texture[] SetTexturesUnsel;
+    public Texture[] SetTexturesSel;
+    public MeshRenderer[] ButtonRends;
     public TextMesh Display;
+    public MeshRenderer[] StageArrows;
+    public Material[] ArrowMats;
 
     private int _moduleId;
     private static int _moduleIdCounter = 1;
+    private bool _buttonsLocked;
     private bool _moduleSolved;
 
     private SetSymbol[] _buttonSymbols;
-
     private SetSymbol[] _setASymbols;
     private SetSymbol[] _setBSymbols;
     private SetSymbol[] _setCSymbols;
@@ -44,9 +46,9 @@ public class SetTheoryScript : MonoBehaviour
             ButtonSels[i].OnInteract += ButtonPress(i);
         SubmitSel.OnInteract += SubmitPress;
 
-        _buttonSymbols = (SetSymbol[]) Enum.GetValues(typeof(SetSymbol)).Shuffle();
+        _buttonSymbols = (SetSymbol[])Enum.GetValues(typeof(SetSymbol)).Shuffle();
         for (int i = 0; i < _buttonSymbols.Length; i++)
-            ButtonSprites[i].sprite = SetSprites[(int) _buttonSymbols[i]];
+            ButtonRends[i].material.mainTexture = SetTexturesUnsel[(int)_buttonSymbols[i]];
 
         // Set A
         _setASymbols = _buttonSymbols.Where(i => SetAValidity(i)).ToArray();
@@ -63,20 +65,20 @@ public class SetTheoryScript : MonoBehaviour
 
         // Set C
         var listC = new List<SetSymbol>();
-        int index = (int) _buttonSymbols[8];
+        int index = (int)_buttonSymbols[8];
         int x = index % 3;
         int y = index / 3;
         listC.Add(_buttonSymbols[8]);
         for (int i = 7; i >= 0; i--)
         {
-            int ix = (int) _buttonSymbols[i];
+            int ix = (int)_buttonSymbols[i];
             if (ix == 4)
                 continue;
             int dx = (ix % 3) - 1;
             int dy = (ix / 3) - 1;
             x = (x + dx + 3) % 3;
             y = (y + dy + 3) % 3;
-            SetSymbol val = (SetSymbol) (y * 3 + x);
+            SetSymbol val = (SetSymbol)(y * 3 + x);
             if (listC.Contains(val))
                 break;
             listC.Add(val);
@@ -100,25 +102,27 @@ public class SetTheoryScript : MonoBehaviour
     private void DisplayStage(int stage)
     {
         Display.text = _equations[stage].ToString();
-
+        Display.fontSize = stage < 2 ? 150 : stage == 2 ? 110 : 75;
         for (var btn = 0; btn < 9; btn++)
-        {
-            if (_curInput.Contains(_buttonSymbols[btn]))
-                ;   // TODO: depress this button
-            else
-                ;   // TODO: un-depress this button
-        }
+            ButtonRends[btn].material.mainTexture = _curInput.Contains(_buttonSymbols[btn]) ? SetTexturesSel[(int)_buttonSymbols[btn]] : SetTexturesUnsel[(int)_buttonSymbols[btn]];
     }
 
     private bool SubmitPress()
     {
+        SubmitSel.AddInteractionPunch(0.5f);
+        Audio.PlaySoundAtTransform("Stamp", SubmitSel.transform);
+        if (_buttonsLocked)
+            return false;
         if (_curInput.SetEquals(_solutions[_stage]))
         {
+            StageArrows[_stage].sharedMaterial = ArrowMats[0];
             Debug.LogFormat("[S.E.T. Theory #{0}] Stage {1} solved.", _moduleId, _stage + 1);
             _stage++;
             if (_stage == 4)
             {
-                Module.HandlePass();
+                _buttonsLocked = true;
+                StartCoroutine(ArrowAnimation());
+                StartCoroutine(TextAnimation());
                 Debug.LogFormat("[S.E.T. Theory #{0}] Module solved.", _moduleId);
             }
             else
@@ -132,25 +136,62 @@ public class SetTheoryScript : MonoBehaviour
             Module.HandleStrike();
             Debug.LogFormat("[S.E.T. Theory #{0}] In stage {1}, you submitted {2}. Strike!", _moduleId, _stage + 1, _curInput.Join(", "));
         }
-
         return false;
+    }
+
+    private IEnumerator ArrowAnimation()
+    {
+        yield return new WaitForSeconds(0.4f);
+        for (int i = 0; i < 9; i++)
+            ButtonRends[i].material.mainTexture = SetTexturesUnsel[(int)_buttonSymbols[i]];
+        for (int i = 0; i < 4; i++)
+        {
+            StageArrows[i].sharedMaterial = ArrowMats[1];
+            Audio.PlaySoundAtTransform("Stamp", transform);
+            yield return new WaitForSeconds(0.4f);
+        }
+        Audio.PlaySoundAtTransform("Chime", transform);
+        Module.HandlePass();
+        _moduleSolved = true;
+    }
+
+    private IEnumerator TextAnimation()
+    {
+        var str = Display.text;
+        while (str.Length != 0)
+        {
+            str = str.Remove(Rnd.Range(0, str.Length), 1);
+            Display.text = str;
+            yield return new WaitForSeconds(0.05f);
+        }
+        Display.fontSize = 120;
+        for (int i = 0; i < 6; i++)
+        {
+            Display.text = "SOLVED".Substring(0, i + 1);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 
     private KMSelectable.OnInteractHandler ButtonPress(int i)
     {
         return delegate ()
         {
-            if (_moduleSolved)
+            ButtonSels[i].AddInteractionPunch(0.5f);
+            if (_buttonsLocked)
                 return false;
 
             var symbolPressed = _buttonSymbols[i];
             if (_curInput.Contains(symbolPressed))
+            {
                 _curInput.Remove(symbolPressed);
+                Audio.PlaySoundAtTransform("Deselect", transform);
+            }
             else
+            {
                 _curInput.Add(symbolPressed);
+                Audio.PlaySoundAtTransform("Stamp", transform);
+            }
             DisplayStage(_stage);
-
-            Debug.LogFormat("<> {0}", _curInput.Join(", "));
             return false;
         };
     }
@@ -176,7 +217,7 @@ public class SetTheoryScript : MonoBehaviour
     private EquationTerm GenerateEquationForStage(int stage)
     {
         var variables = new[] { 0, 1, 2 }
-            .Select(i => (EquationTerm) new EquationTermVariable(i))
+            .Select(i => (EquationTerm)new EquationTermVariable(i))
             .ToArray()
             .Shuffle();
 
@@ -207,7 +248,7 @@ public class SetTheoryScript : MonoBehaviour
 
     private static EquationTerm GenerateSubequation(bool useComplement, EquationTerm[] terms)
     {
-        var op = ((SetOperation[]) Enum.GetValues(typeof(SetOperation))).Except(new[] { SetOperation.Complement }).PickRandom();
+        var op = ((SetOperation[])Enum.GetValues(typeof(SetOperation))).Except(new[] { SetOperation.Complement }).PickRandom();
         var swapped = Rnd.Range(0, 2) != 0;
         var left = swapped ? terms[1] : terms[0];
         var right = swapped ? terms[0] : terms[1];
@@ -217,5 +258,60 @@ public class SetTheoryScript : MonoBehaviour
     private static EquationTerm RandomlyComplement(EquationTerm eq)
     {
         return Rnd.Range(0, 2) != 0 ? new EquationTermOperation(SetOperation.Complement, eq) : eq;
+    }
+
+#pragma warning disable 0414
+    private readonly string TwitchHelpMessage = "!{0} select pacman x triangle teepee shirt arrow diamond h star [Select these shapes.] | !{0} submit [Press the submit button.]";
+#pragma warning restore 0414
+
+    private IEnumerator ProcessTwitchCommand(string command)
+    {
+        command = command.Trim().ToLowerInvariant();
+        if (Regex.IsMatch(command, @"^\s*submit\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            SubmitSel.OnInteract();
+            yield break;
+        }
+        var parameters = command.Split(' ');
+        if (parameters.Length < 2 || parameters[0] != "select")
+            yield break;
+        var thingsToToggle = new List<int>();
+        for (int i = 1; i < parameters.Length; i++)
+        {
+            var shapes = new string[] { "pacman", "x", "triangle", "teepee", "shirt", "arrow", "diamond", "h", "star" };
+            var ix = Array.IndexOf(shapes, parameters[i]);
+            if (ix == -1)
+                yield break;
+            thingsToToggle.Add(ix);
+        }
+        yield return null;
+        for (int i = 0; i < 9; i++)
+        {
+            if ((thingsToToggle.Contains((int)_buttonSymbols[i]) && !_curInput.Contains(_buttonSymbols[i])) || (!thingsToToggle.Contains((int)_buttonSymbols[i]) && _curInput.Contains(_buttonSymbols[i])))
+            {
+                ButtonSels[i].OnInteract();
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+    }
+
+    private IEnumerator TwitchHandleForcedSolve()
+    {
+        for (int st = _stage; st < 4; st++)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                if ((_solutions[st].Contains(_buttonSymbols[i]) && !_curInput.Contains(_buttonSymbols[i]))|| (!_solutions[st].Contains(_buttonSymbols[i]) && _curInput.Contains(_buttonSymbols[i])))
+                {
+                    ButtonSels[i].OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+            }
+            SubmitSel.OnInteract();
+            yield return new WaitForSeconds(0.2f);
+        }
+        while (!_moduleSolved)
+            yield return true;
     }
 }
