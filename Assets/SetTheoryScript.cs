@@ -50,6 +50,8 @@ public class SetTheoryScript : MonoBehaviour
         for (int i = 0; i < _buttonSymbols.Length; i++)
             ButtonRends[i].material.mainTexture = SetTexturesUnsel[(int)_buttonSymbols[i]];
 
+        Debug.LogFormat("[S.E.T. Theory #{0}] The symbols on the modules are: {1}.", _moduleId, _buttonSymbols.Join(", "));
+
         // Set A
         _setASymbols = _buttonSymbols.Where(i => SetAValidity(i)).ToArray();
         Debug.LogFormat("[S.E.T. Theory #{0}] Symbols present in Set A: {1}", _moduleId, _setASymbols.Join(", "));
