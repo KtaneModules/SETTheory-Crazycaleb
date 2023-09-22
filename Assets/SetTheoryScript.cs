@@ -263,7 +263,7 @@ public class SetTheoryScript : MonoBehaviour
     }
 
 #pragma warning disable 0414
-    private readonly string TwitchHelpMessage = "!{0} select pacman x triangle teepee shirt arrow diamond h star [Select these shapes.] | !{0} submit [Press the submit button.]";
+    private readonly string TwitchHelpMessage = "!{0} select pacman x triangle teepee shirt arrow diamond h star [Select these shapes.] | !{0} select empty [Deselect all the shapes.] | !{0} submit [Press the submit button.]";
 #pragma warning restore 0414
 
     private IEnumerator ProcessTwitchCommand(string command)
@@ -272,7 +272,22 @@ public class SetTheoryScript : MonoBehaviour
         if (Regex.IsMatch(command, @"^\s*submit\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
             yield return null;
+            yield return "strike";
+            yield return "solve";
             SubmitSel.OnInteract();
+            yield break;
+        }
+        else if (Regex.IsMatch(command, @"^\s*select\s+(nothing|empty)\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            for (int i = 0; i < 9; i++)
+            {
+                if (_curInput.Contains(_buttonSymbols[i]))
+                {
+                    ButtonSels[i].OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+            }
             yield break;
         }
         var parameters = command.Split(' ');
