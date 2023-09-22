@@ -14,7 +14,10 @@ MonoBehaviour:
   id: SetTheory
   title: S.E.T. Theory
   author: Crazycaleb, Quinn Wuest, Timwi, Vincology
-  description: "Me \u2282 your mom tonight."
+  description: "Me \u2282 your mom tonight.\r\n\r\nDeveloped by Crazycaleb, Quinn
+    Wuest, & Timwi\r\nManual by Vincology\r\nModelling by Crazycaleb\r\nS.E.T. Materials
+    by Timwi\r\n\r\n[url=https://ktane.timwi.de/HTML/S.E.T.%20Theory.html]Manual HTML[/url]\r\n[url=https://ktane.timwi.de/PDF/S.E.T.%20Theory.pdf]Manual
+    PDF[/url]"
   version: 1.0
   outputFolder: build
   previewImage: {fileID: 2800000, guid: ae6c6fe777836d841953310051a4022d, type: 3}
